@@ -16,7 +16,7 @@ const checkEmail = async () => {
         mailjs.me().then((e) => {
           console.log(`Berhasil login sebagai ${e.data.address}`);
         });
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         mailjs.getMessages().then((msg) => {
           if (msg.data.length >= 1 && msg.status) {
             resolve(msg.data[0].intro);
@@ -81,7 +81,7 @@ async function main() {
       );
     } catch (e) {
       console.log('Tidak menemukan selector\n');
-      browser.close();
+      await browser.close();
       continue;
     }
     await page.click(
@@ -100,7 +100,7 @@ async function main() {
     console.log(`OTP: ${otp}`);
     if (!otp) {
       console.log('OTP tidak ditemukan');
-      browser.close();
+      await browser.close();
     }
     await page.waitForSelector(
       '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div > div > div > input'
@@ -120,7 +120,7 @@ async function main() {
       );
     } catch (e) {
       console.log('Gak bisa klik button\n');
-      browser.close();
+      await browser.close();
       continue;
     }
     await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -136,6 +136,9 @@ async function main() {
     });
     console.log(hasil);
     console.log('');
+    if (hasil === 'Oh No!') {
+      return;
+    }
     if (hasil.toLowerCase().includes('email sent')) {
       console.log('Email sudah dikirim');
       berhasil++;
