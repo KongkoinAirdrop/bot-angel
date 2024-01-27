@@ -118,7 +118,6 @@ async function main() {
         delay: 250,
       }
     );
-    console.log('Menunggu hasil...');
     await new Promise((resolve) => setTimeout(resolve, 3000));
     try {
       await page.click(
@@ -129,6 +128,8 @@ async function main() {
       await browser.close();
       continue;
     }
+    console.log('Menunggu hasil...');
+
     await new Promise((resolve) => setTimeout(resolve, 3000));
     const hasil = await page.evaluate(() => {
       //check if selector exist
