@@ -136,9 +136,7 @@ async function main() {
     });
     console.log(hasil);
     console.log('');
-    if (hasil === 'Oh No!') {
-      return;
-    }
+
     if (hasil.toLowerCase().includes('email sent')) {
       console.log('Email sudah dikirim');
       berhasil++;
