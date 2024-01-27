@@ -16,7 +16,7 @@ const checkEmail = async () => {
         await mailjs.me().then((e) => {
           console.log(`Berhasil login sebagai ${e.data.address}`);
         });
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 10000));
         await mailjs.getMessages().then((msg) => {
           if (msg.data.length >= 1 && msg.status) {
             resolve(msg.data[0].intro);
@@ -39,7 +39,7 @@ async function main() {
   }
   while (true) {
     browser = await puppeteer.launch({
-      headless: false,
+      headless: 'new',
       devtools: true,
       args: ['--start-maximized'],
     });
