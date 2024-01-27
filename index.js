@@ -40,7 +40,7 @@ async function main() {
   while (true) {
     browser = await puppeteer.launch({
       headless: 'new',
-      devtools: false,
+      devtools: true,
       args: ['--start-maximized'],
     });
     const [page] = await browser.pages();
@@ -102,9 +102,15 @@ async function main() {
       console.log('OTP tidak ditemukan');
       await browser.close();
     }
-    await page.waitForSelector(
-      '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div > div > div > input'
-    );
+    try {
+      await page.waitForSelector(
+        '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div > div > div > input'
+      );
+    } catch (e) {
+      console.log('Tidak menemukan selector\n');
+      await browser.close();
+      continue;
+    }
     await page.type(
       '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div > div > div > input',
       `${otp}`,
