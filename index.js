@@ -39,7 +39,7 @@ async function main() {
   }
   while (true) {
     browser = await puppeteer.launch({
-      headless: 'new',
+      headless: false,
       devtools: true,
       args: ['--start-maximized'],
     });
@@ -143,15 +143,16 @@ async function main() {
     });
     console.log(hasil);
     console.log('');
+    if (hasil === 'Ticket Requested') {
+      console.log('Ganti akun, sudah limit claim.');
+      process.exit(0);
+    }
 
     if (hasil.toLowerCase().includes('email sent')) {
       console.log('Berhasil!');
       process.exit(0);
     }
-    if (berhasil >= 4) {
-      console.log('Berhasil 4x, cek email!');
-      process.exit(0);
-    }
+
     await browser.close();
   }
 }
