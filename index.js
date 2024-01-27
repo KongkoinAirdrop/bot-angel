@@ -138,8 +138,8 @@ async function main() {
     console.log('');
 
     if (hasil.toLowerCase().includes('email sent')) {
-      console.log('Email sudah dikirim');
-      berhasil++;
+      console.log('Berhasil!');
+      process.exit(0);
     }
     if (berhasil >= 4) {
       console.log('Berhasil 4x, cek email!');
