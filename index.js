@@ -39,7 +39,7 @@ async function main() {
   }
   while (true) {
     browser = await puppeteer.launch({
-      headless: false,
+      headless: 'new',
       devtools: false,
       args: ['--start-maximized'],
     });
