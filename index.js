@@ -13,11 +13,11 @@ const checkEmail = async () => {
     await mailjs
       .login(`${process.env.EMAIL}`, `${process.env.PASSWORD}`)
       .then(async () => {
-        mailjs.me().then((e) => {
+        await mailjs.me().then((e) => {
           console.log(`Berhasil login sebagai ${e.data.address}`);
         });
         await new Promise((resolve) => setTimeout(resolve, 5000));
-        mailjs.getMessages().then((msg) => {
+        await mailjs.getMessages().then((msg) => {
           if (msg.data.length >= 1 && msg.status) {
             resolve(msg.data[0].intro);
           } else {
