@@ -10,22 +10,20 @@ puppeteer.use(StealthPlugin());
 
 const checkEmail = async () => {
   return new Promise(async (resolve, reject) => {
-    await mailjs
-      .login(`${process.env.EMAIL}`, `${process.env.PASSWORD}`)
-      .then(async () => {
-        await mailjs.me().then((e) => {
-          console.log(`Berhasil login sebagai ${e.data.address}`);
-        });
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        await mailjs.getMessages().then((msg) => {
-          if (msg.data.length >= 1 && msg.status) {
-            resolve(msg.data[0].intro);
-          } else {
-            reject('Tidak ada email masuk');
-          }
-        });
-        return;
+    await mailjs.login(`${process.env.EMAIL}`, `%3g^*#QJyY`).then(async () => {
+      await mailjs.me().then((e) => {
+        console.log(`Berhasil login sebagai ${e.data.address}`);
       });
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await mailjs.getMessages().then((msg) => {
+        if (msg.data.length >= 1 && msg.status) {
+          resolve(msg.data[0].intro);
+        } else {
+          reject('Tidak ada email masuk');
+        }
+      });
+      return;
+    });
   });
 };
 
@@ -71,27 +69,30 @@ async function main() {
       '#__next > div.bg-core-gray-950 > div > div.bottom-0.flex.flex-col.lg\\:absolute.lg\\:left-\\[55vh\\].lg\\:right-0.lg\\:top-0.xl\\:left-\\[53vh\\].\\32 xl\\:left-\\[51vh\\].tall\\:left-\\[40vh\\] > div > div.flex.h-full.items-center.justify-center > div > div.flex.flex-col.gap-4.border-t-2.border-t-core-gray-300.py-8.md\\:flex-row.md\\:py-8 > button'
     );
 
+    let selector =
+      '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div.flex.items-center.justify-items-center > div';
+    let isRa = false;
     await new Promise((resolve) => setTimeout(resolve, 5000));
     try {
-      await page.waitForSelector(
-        '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div.flex.items-center.justify-items-center > div',
-        {
-          timeout: 5000,
-        }
-      );
+      await page.waitForSelector(selector, {
+        timeout: 5000,
+      });
     } catch (e) {
-      console.log('Tidak menemukan selector\n');
-      await browser.close();
-      continue;
+      isRa = true;
+      selector =
+        '#headlessui-dialog-panel-\\:ra\\: > div > div > div.px-4 > div > div:nth-child(2) > div.flex.items-center.justify-items-center > div';
+      // continue;
     }
+    await page.click(selector);
     await page.click(
-      '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div.flex.items-center.justify-items-center > div'
+      `#headlessui-dialog-panel-\\:${
+        isRa ? 'ra' : 'rb'
+      }\\: > div > div > div.px-4 > div > div:nth-child(2) > div.cursor-pointer > div > div`
     );
     await page.click(
-      '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div.cursor-pointer > div > div'
-    );
-    await page.click(
-      '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div.mx-auto.mt-7.flex.w-fit.flex-col.justify-items-stretch > button'
+      `#headlessui-dialog-panel-\\:${
+        isRa ? 'ra' : 'rb'
+      }\\: > div > div > div.px-4 > div > div.mx-auto.mt-7.flex.w-fit.flex-col.justify-items-stretch > button`
     );
     console.log('Mengirim OTP...');
     const emailres = await checkEmail();
@@ -104,7 +105,9 @@ async function main() {
     }
     try {
       await page.waitForSelector(
-        '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div > div > div > input'
+        `#headlessui-dialog-panel-\\:${
+          isRa ? 'ra' : 'rb'
+        }\\: > div > div > div.px-4 > div > div:nth-child(2) > div > div > div > input`
       );
     } catch (e) {
       console.log('Tidak menemukan selector\n');
@@ -112,7 +115,9 @@ async function main() {
       continue;
     }
     await page.type(
-      '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div:nth-child(2) > div > div > div > input',
+      `#headlessui-dialog-panel-\\:${
+        isRa ? 'ra' : 'rb'
+      }\\: > div > div > div.px-4 > div > div:nth-child(2) > div > div > div > input`,
       `${otp}`,
       {
         delay: 250,
@@ -121,7 +126,9 @@ async function main() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
     try {
       await page.click(
-        '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > div.mx-auto.mt-7.flex.w-fit.flex-col.justify-items-stretch > button'
+        `#headlessui-dialog-panel-\\:${
+          isRa ? 'ra' : 'rb'
+        }\\: > div > div > div.px-4 > div > div.mx-auto.mt-7.flex.w-fit.flex-col.justify-items-stretch > button`
       );
     } catch (e) {
       console.log('Gak bisa klik button\n');
@@ -131,16 +138,17 @@ async function main() {
     console.log('Menunggu hasil...');
 
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    const hasil = await page.evaluate(() => {
+    const hasil = await page.evaluate((isRa) => {
       //check if selector exist
-      const selector =
-        '#headlessui-dialog-panel-\\:rb\\: > div > div > div.px-4 > div > h5';
+      const selector = `#headlessui-dialog-panel-\\:${
+        isRa ? 'ra' : 'rb'
+      }\\: > div > div > div.px-4 > div > h5`;
       if (document.querySelector(selector)) {
         return document.querySelector(selector).innerText;
       } else {
         return 'Gagal Bang!';
       }
-    });
+    }, isRa);
     console.log(hasil);
     console.log('');
     if (hasil === 'Ticket Requested') {
