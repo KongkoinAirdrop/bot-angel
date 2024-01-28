@@ -100,6 +100,9 @@ async function main() {
     console.log('Mengirim OTP...');
     const emailres = await checkEmail();
     console.log(emailres);
+    if (emailres === 'Gagal login, cek file env') {
+      process.exit(0);
+    }
     const otp = emailres.match(/\d/g)?.join('') || '';
     console.log(`OTP: ${otp}`);
     if (!otp) {
