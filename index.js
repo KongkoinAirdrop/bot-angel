@@ -10,23 +10,25 @@ puppeteer.use(StealthPlugin());
 
 const checkEmail = async () => {
   return new Promise(async (resolve, reject) => {
-    await mailjs.login(`${process.env.EMAIL}`, `%3g^*#QJyY`).then(async () => {
-      await mailjs.me().then((e) => {
-        if (!e.data.address) {
-          reject('Gagal login, cek file env');
-        }
-        console.log(`Berhasil login sebagai ${e.data.address}`);
+    await mailjs
+      .login(`${process.env.EMAIL}`, `${process.env.PASSWORD}`)
+      .then(async () => {
+        await mailjs.me().then((e) => {
+          if (!e.data.address) {
+            reject('Gagal login, cek file env');
+          }
+          console.log(`Berhasil login sebagai ${e.data.address}`);
+        });
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await mailjs.getMessages().then((msg) => {
+          if (msg.data.length >= 1 && msg.status) {
+            resolve(msg.data[0].intro);
+          } else {
+            reject('Tidak ada email masuk');
+          }
+        });
+        return;
       });
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      await mailjs.getMessages().then((msg) => {
-        if (msg.data.length >= 1 && msg.status) {
-          resolve(msg.data[0].intro);
-        } else {
-          reject('Tidak ada email masuk');
-        }
-      });
-      return;
-    });
   });
 };
 
