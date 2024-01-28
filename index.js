@@ -98,11 +98,12 @@ async function main() {
       }\\: > div > div > div.px-4 > div > div.mx-auto.mt-7.flex.w-fit.flex-col.justify-items-stretch > button`
     );
     console.log('Mengirim OTP...');
-    const emailres = await checkEmail();
-    console.log(emailres);
-    if (emailres === 'Gagal login, cek file env') {
+    const emailres = await checkEmail().catch((e) => {
+      console.log(e);
       process.exit(0);
-    }
+    });
+    console.log(emailres);
+
     const otp = emailres.match(/\d/g)?.join('') || '';
     console.log(`OTP: ${otp}`);
     if (!otp) {
