@@ -12,6 +12,9 @@ const checkEmail = async () => {
   return new Promise(async (resolve, reject) => {
     await mailjs.login(`${process.env.EMAIL}`, `%3g^*#QJyY`).then(async () => {
       await mailjs.me().then((e) => {
+        if (!e.data.address) {
+          reject('Gagal login, cek file env');
+        }
         console.log(`Berhasil login sebagai ${e.data.address}`);
       });
       await new Promise((resolve) => setTimeout(resolve, 5000));
