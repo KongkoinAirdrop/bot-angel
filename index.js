@@ -88,7 +88,13 @@ async function main() {
         '#headlessui-dialog-panel-\\:ra\\: > div > div > div.px-4 > div > div:nth-child(2) > div.flex.items-center.justify-items-center > div';
       // continue;
     }
-    await page.click(selector);
+    try {
+      await page.click(selector);
+    } catch (e) {
+      console.log('Gak bisa klik button\n');
+      await browser.close();
+      continue;
+    }
     await page.click(
       `#headlessui-dialog-panel-\\:${
         isRa ? 'ra' : 'rb'
